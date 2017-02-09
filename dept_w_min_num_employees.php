@@ -13,12 +13,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
 
-$sql = "SELECT d1.dept_no, d1.dept_name
-       	FROM departments d1
-	WHERE num_emps = MIN(num_emps) IN (
-	      SELECT COUNT(e.emp_no) AS num_emps, d.dept_no, d.dept_name
-       	      FROM departments d2, dept_emp e
-	      GROUP BY d.dept_no);"
+$sql = "CREATE TABLE temp_table
+    	SELECT dept_no, COUNT(dept_no) AS num_emps
+    	FROM dept_emp
+    	GROUP BY dept_no;
+	
+	"
 
 $result = $conn->query($sql);
 
