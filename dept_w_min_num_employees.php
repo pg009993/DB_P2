@@ -18,6 +18,12 @@ $sql = "CREATE TABLE temp_table
     	FROM dept_emp
     	GROUP BY dept_no;
 	
+	SELECT *
+    	FROM(SELECT d.dept_name, d.dept_no, t.num_emps
+    	FROM departments AS d JOIN temp_table AS t ON d.dept_no=t.dept_no) AS sub_query
+    	ORDER BY num_emps LIMIT 1;
+	
+	drop table temp_table;
 	"
 
 $result = $conn->query($sql);
