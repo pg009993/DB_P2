@@ -31,7 +31,7 @@ $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {
-        echo "Dept no: " . $row["dept_no"]. " - Name: " . $row["dept_name"]. "<br>";
+        echo "Dept no: " . $row["dept_name"]. "Dept Name: " . $row["dept_name"]. "Number of Employees: " . $row["num_emps"] . "<br>";
     }
 } else {
     echo "0 results";
