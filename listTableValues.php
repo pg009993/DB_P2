@@ -81,54 +81,54 @@
         $conn = new PDO($dsn, $username, $password, $opt);
         echo '<p id="msg">Connected successfully to database "' . $dbname .'"</p>';
         echo '<p id="msg">The following tables are in the database.</p>';
-    } catch (PDOException $e) {
-        echo '<p id="msg"> Connection failed: ' . $e->getMessage() . '</p>';
-    }
+    
+        $sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='" . $dbname . "'"; 
+        $result = $conn->query($sql);
 
-    $sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='" . $dbname . "'"; 
-    $result = $conn->query($sql);
-
-    if (!$result) {
-        echo '<p id="msg">DB Error, could not list tables</p>';
-        echo '<p id="msg">MySQL Error: ' . mysql_error() . "</p>";
-        exit;
-    }
-
-    $tableList = array();
-    while($row = $result->fetch()){
-        array_push($tableList, $row['TABLE_NAME']);
-    }
-?>
-<div id="box">
-<?
-    for($i = 0; $i < sizeof($tableList); $i++){
-        $tableContent = array();
-        //select all field names from each table in every iteration of the for loop
-        $sql2 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $dbname . "' AND TABLE_NAME = '" . $tableList[$i] . "'";
-        
-        
-        $result2 = $conn->query($sql2);
-
-        if (!$result2) {
+        if (!$result) {
             echo '<p id="msg">DB Error, could not list tables</p>';
             echo '<p id="msg">MySQL Error: ' . mysql_error() . "</p>";
             exit;
         }
-        
-        echo('<div id="tables">');
-            array_push($tableContent, '<p id="titles">TABLE_NAME: </p>' . $tableList[$i]);
-            array_push($tableContent, '<p id="titles">COLUMNS WITHIN TABLE...</p>');
-            while($row = $result2->fetch()){
-                array_push($tableContent, $row['COLUMN_NAME']);
+
+        $tableList = array();
+        while($row = $result->fetch()){
+            array_push($tableList, $row['TABLE_NAME']);
+        }
+
+        echo('<div id="box">');
+        for($i = 0; $i < sizeof($tableList); $i++){
+            $tableContent = array();
+            //select all field names from each table in every iteration of the for loop
+            $sql2 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $dbname . "' AND TABLE_NAME = '" . $tableList[$i] . "'";
+
+
+            $result2 = $conn->query($sql2);
+
+            if (!$result2) {
+                echo '<p id="msg">DB Error, could not list tables</p>';
+                echo '<p id="msg">MySQL Error: ' . mysql_error() . "</p>";
+                exit;
             }
 
-            for($x =0; $x < sizeof($tableContent); $x++){
-                echo $tableContent[$x] . '<br>';
-            }
+            echo('<div id="tables">');
+                array_push($tableContent, '<p id="titles">TABLE_NAME: </p>' . $tableList[$i]);
+                array_push($tableContent, '<p id="titles">COLUMNS WITHIN TABLE...</p>');
+                while($row = $result2->fetch()){
+                    array_push($tableContent, $row['COLUMN_NAME']);
+                }
+
+                for($x =0; $x < sizeof($tableContent); $x++){
+                    echo $tableContent[$x] . '<br>';
+                }
+            echo('</div>');
+        }
         echo('</div>');
+    
+    } catch (PDOException $e) {
+        echo '<p id="msg"> Connection failed: ' . $e->getMessage() . '</p>';
     }
 ?>
-</div>
 <br>
 <div class="buttons">
     
