@@ -13,12 +13,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
 
-$sql = "SELECT e.first_name, e.last_name, e.emp_no
-        FROM employees e1
-	WHERE MAX(DATEDIFF(day, d.from_date, d.to_date) IN (
-	      SELECT DISTINCT (*)
-              FROM employees e2, dept_manager d
-	      WHERE e2.emp_no = d.emp_no);"
+$sql = "SELECT e.emp_no, e.first_name, e.last_name, d.from_date, d.to_date
+    	FROM dept_manager AS d JOIN employees AS e ON d.emp_no=e.emp_no
+     	ORDER BY DATEDIFF(d.from_date, d.to_date);"
 
 $result = $conn->query($sql);
 
