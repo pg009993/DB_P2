@@ -62,7 +62,7 @@
         echo("<p>The provided database name didn't set properly.</p>");
     }
 
-    $servername = 'localhost';
+    $servername = 'localhost:3306';
     $username = 'root';
     $password = 'root';
 
