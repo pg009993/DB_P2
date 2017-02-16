@@ -6,20 +6,17 @@ $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         
      //query being passed to the database 
-$sql = "CREATE TABLE x_table
-        SELECT e.emp_no, e.first_name, e.last_name, d.from_date, d.to_date
-    	FROM dept_manager AS d JOIN employees AS e ON d.emp_no=e.emp_no;
-     	
-        UPDATE x_table
+$sql = "SET SQL_SAFE_UPDATES = 0;
+    
+        UPDATE dept_manager
         SET to_date = CURDATE()
         WHERE to_date = '9999-01-01';
+    
+        SELECT e.emp_no, e.first_name, e.last_name, d.from_date, d.to_date
+	FROM dept_manager AS d JOIN employees AS e ON d.emp_no=e.emp_no
+        ORDER BY DATEDIFF(d.from_date, d.to_date) LIMIT 1;";
         
-        SELECT * FROM x_table
-        ORDER BY DATEDIFF(d.from_date, d.to_date) LIMIT 1;
-        
-        DROP TABLE x_table;";
-        
-     //prepping the query and passing it to the database 
+     //prepping the query and passing it to the databas 
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
