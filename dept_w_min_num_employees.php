@@ -5,17 +5,10 @@ try {$conn = new PDO("mysql:host=" . $servername . ";dbname=" . $dbname, $userna
 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         //query going to the database 
-$sql = "CREATE TABLE y_table
-    	SELECT dept_no, COUNT(dept_no) AS num_emps
-    	FROM dept_emp
-    	GROUP BY dept_no;
-	
-	    SELECT *
-    	FROM(SELECT d.dept_name, d.dept_no, t.num_emps
-    	FROM departments AS d JOIN y_table AS t ON d.dept_no=t.dept_no) AS sub_query
-    	ORDER BY num_emps LIMIT 1;
-	
-	    drop table y_table;";
+$sql = "SELECT d.dept_name, d.dept_no, COUNT(e.dept_no) AS num_emps
+    	FROM departments AS d JOIN dept_emp AS e ON d.dept_no=e.dept_no
+        GROUP BY e.dept_no
+    	ORDER BY num_emps LIMIT 1;";
         
      //prepping the results of the query 
         $stmt = $conn->prepare($sql);
