@@ -5,7 +5,7 @@ try {$conn = new PDO("mysql:host=" . $servername . ";dbname=" . $dbname, $userna
 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         //query going to the database 
-$sql = "SELECT d.dept_name, d.dept_no, COUNT(e.dept_no) AS num_emps
+$sql = "SELECT d.dept_name, d.dept_no, COUNT(e.emp_no) AS num_emps
     	FROM departments AS d JOIN dept_emp AS e ON d.dept_no=e.dept_no
         GROUP BY e.dept_no
     	ORDER BY num_emps LIMIT 1;";
