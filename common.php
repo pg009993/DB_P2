@@ -1,7 +1,7 @@
 <?php
 // lines below create variables for server name, db, username, password
 //common.php creates the connection to the employee database. 
-$servername = 'localhost:3306';
+$servername = 'localhost';
 $dbname = 'employees';
 $username = 'root';
 $password = 'root';
