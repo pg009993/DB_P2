@@ -53,6 +53,7 @@
 </head>
 <body>
 <?php
+    include 'common.php';
     //make it so that people can type in a dbname on the form page
     $dbname = '';
     
@@ -61,11 +62,7 @@
     } else {
         echo("<p>The provided database name didn't set properly.</p>");
     }
-
-    $servername = 'localhost:3306';
-    $username = 'root';
-    $password = 'root';
-
+    
     $charset = 'utf8';
 
     $dsn = "mysql:host=$servername;dbname=$dbname;charset=$charset";
@@ -77,6 +74,7 @@
     ];
 
     // Create connection
+    
     try {
         $conn = new PDO($dsn, $username, $password, $opt);
         echo '<p id="msg">Connected successfully to database "' . $dbname .'"</p>';
