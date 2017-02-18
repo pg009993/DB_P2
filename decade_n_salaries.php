@@ -21,7 +21,7 @@ $sql = "SELECT * FROM ( SELECT d.dept_no, CONCAT(SUBSTR(e.birth_date,1,3),'0') A
         if($numRows > 0){
             // output data of each row  
         while($row = $stmt->fetch()) {
-        echo "Dept no: " . $row["dept_no"]. "Decade: " . $row["decade"]. "Number of Employees: " . $row["num_emps"] . "Salary: " . $row["avg_sal"] . "<br>";
+        echo "Dept no: " . $row["dept_no"]. " || Decade: " . $row["decade"]. " || Number of Employees: " . $row["num_emps"] . " || Salary: " . $row["avg_sal"] . "<br>";
                 }
             }else{
             echo 'No results';
