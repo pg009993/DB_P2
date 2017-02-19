@@ -1,47 +1,42 @@
 <?php
-//establish a connection to the database
+
+//establish connection
 include 'common.php';
+
 try {$conn = new PDO("mysql:host=" . $servername . ";dbname=" . $dbname, $username, $password);
 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+        //query being passed to the database
+$sql = "SELECT d.dept_no, 
+        SUM(CASE WHEN e.gender='F' THEN 1 END)/COUNT(*) AS ratio, 
+        (SUM(CASE WHEN s.emp_no=(CASE WHEN e.gender='F' THEN e.emp_no END) THEN s.salary END)/SUM(CASE WHEN e.gender='F' THEN 1 END)) AS fem_sal,
+        (SUM(CASE WHEN s.emp_no=(CASE WHEN e.gender='M' THEN e.emp_no END) THEN s.salary END)/SUM(CASE WHEN e.gender='M' THEN 1 END)) AS male_sal
+        FROM employees e, dept_emp d, salaries s           
+        WHERE d.emp_no=e.emp_no AND d.emp_no=s.emp_no
+        GROUP BY dept_no;"; 
         
-     //query being passed to the database 
-$sql = "SELECT e.emp_no, e.first_name, e.last_name, d.from_date, d.to_date
-	   FROM dept_manager AS d JOIN employees AS e ON d.emp_no=e.emp_no
-        ORDER BY DATEDIFF(d.from_date, d.to_date);";
-        
-     //prepping the query and passing it to the databas 
+     //prepping results
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $numRows = $stmt->rowCount();
 
-     
-      if($numRows > 0){
+           
+     //print results below 
+        if($numRows > 0){
             // output data of each row  
         while($row = $stmt->fetch()) {
-            $allDates = "Manager Number: " . $row["emp_no"] . " First Name: " . $row["first_name"]. " Last Name: " . $row["last_name"]. " Start Date: " . $row["from_date"];
-                
-            if($row[to_date] == '9999-01-01'){
-                echo $allDates . "End Date: " . date("Y-m-d") . "<br>";
+       echo "Department Number: " . $row["dept_no"] . " || Ratio: " . $row['ratio'] . " || Average Female Salary: " . $row['fem_sal'] . " || Avergae Male Salary: " . $row['male_sal'] . "<br>";
                 }
-            else{ 
-                echo $allDates . "End Date: ". $row["to_date"]. "<br>";
-            }
-            
-        }
-            echo '</table>';
             }else{
             echo 'No results';
             }
         } 
 
-//error handling 
+//error handling
         catch (PDOException $e) {
             die('Database connection failed: ' . $e->getMessage());
         }
 
 $conn = null;
 ?>
-
-
